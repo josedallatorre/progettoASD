@@ -3,3 +3,6 @@ int scanArray(char *);
 
 //compute the period 
 int PeriodNaive(char *, int);
+
+//
+char *substr(char *src, int i, int j);

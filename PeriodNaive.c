@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "PeriodNaive.h"
+#include <malloc.h>
 
 #define MAX_LINE_SIZE 1000   // maximum size of a line of input
 
@@ -10,11 +11,6 @@ int main(int argc, char const *argv[])
 {
     char a[MAX_LINE_SIZE];
     int size = scanArray(a); 
-    if (size==1)
-    {
-        return 1;
-    }
-    
     int p = PeriodNaive(a, size);
     printf("%d", p);
     
@@ -22,19 +18,21 @@ int main(int argc, char const *argv[])
 }
 
 int PeriodNaive(char *s, int n){
-    for (int p = 1; p < n; p++)
+    for (int p = 1; p <= n; p++)
     {
-        char *prefix = substr(s,0,p);
-        char *suffix = substr(s, p,n); 
-        if (strncmp(prefix, suffix,p)==0)
-        {
+        int r = n-p;
+        int j;
+        for (j  = 0; (j<n-p)&&(s[j]==s[j+p]); j++)
+        {          
+        } 
+        if (j==n-p){
             return p;
         }
-        
-        
+            
     }
-    
+    return n;
 }
+
 
 char *substr(char *src, int i, int j){
     int len= j-i;
