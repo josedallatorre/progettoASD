@@ -10,37 +10,12 @@ int main(int argc, char const *argv[])
 {
     char a[MAX_LINE_SIZE];
     int size = scanArray(a); 
-    if (size==1)
-    {
-        return 1;
-    }
-    
-    int p = PeriodNaive(a, size);
-    printf("%d", p);
     
     return 0;
 }
 
-int PeriodNaive(char *s, int n){
-    for (int p = 1; p < n; p++)
-    {
-        char *prefix = substr(s,0,p);
-        char *suffix = substr(s, p,n); 
-        if (strncmp(prefix, suffix,p)==0)
-        {
-            return p;
-        }
-        
-        
-    }
+int PeriodNaive(char *s, int size){
     
-}
-
-char *substr(char *src, int i, int j){
-    int len= j-i;
-    char *dest = (char*)malloc(sizeof(char)*(len+1));
-    strncpy(dest,(src+i), len);
-    return dest;
 }
 
 int scanArray(char *a) {
