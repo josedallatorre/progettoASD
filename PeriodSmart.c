@@ -6,6 +6,9 @@
 
 #define MAX_LINE_SIZE 1000   // maximum size of a line of input
 
+//todo:
+//- mettere gli indici come vuole lui partendo da 1 fino a n
+//-metttere apposto l'array con un memset e n+1
 
 int main(int argc, char const *argv[])
 {
@@ -18,12 +21,13 @@ int main(int argc, char const *argv[])
 }
 
 int PeriodSmart(char *s, int n){
-    int r[n-1];
+    //creare questo array con malloc
+    int r[7]={0};
     r[0]=0;
-    for (int i = 1; i <= n-1; i++)//per calcolare r[i+1]
+    for (int i = 1; i < n-1; i++)//per calcolare r[i+1]
     {
         int z=r[i];
-        while ((z>0)&&(s[i+1]!=s[z+1]))
+        while ((z>=0)&&(s[i+1]!=s[z+1]))
         {
             z=r[z];
         }
