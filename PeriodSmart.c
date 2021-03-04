@@ -6,28 +6,27 @@
 
 #define MAX_LINE_SIZE 1000   // maximum size of a line of input
 
-//todo:
-//- mettere gli indici come vuole lui partendo da 1 fino a n
-//-metttere apposto l'array con un memset e n+1
-
 int main(int argc, char const *argv[])
 {
     char a[MAX_LINE_SIZE];
     int size = scanArray(a); 
-    int p = PeriodSmart(a, size);
+    char *b = (char *)malloc(size+1*sizeof(char));
+    //metto i valori da b[1..n]
+    memcpy(b+1,a, size);
+    int p = PeriodSmart(b, size);
     printf("%d", p);
-    
+    free(b);
     return 0;
 }
 
 int PeriodSmart(char *s, int n){
-    //creare questo array con malloc
-    int r[7]={0};
-    r[0]=0;
-    for (int i = 1; i < n-1; i++)//per calcolare r[i+1]
+    int *r = (int*)malloc((n+1)* sizeof (int) );
+    r[1]=0;
+    int z=0;
+    for (int i = 1; i <= n-1; i++)//per calcolare r[i+1]
     {
-        int z=r[i];
-        while ((z>=0)&&(s[i+1]!=s[z+1]))
+        z=r[i];
+        while ((z>0)&&(s[i+1]!=s[z+1]))
         {
             z=r[z];
         }
@@ -37,13 +36,12 @@ int PeriodSmart(char *s, int n){
         }else{
             r[i+1]=0;
         }
-        return n - r[n];        
+
     }
-    
-}
-
-
-
+    int risp = n - r[n];
+    free(r);
+    return risp; 
+    }
 
 int scanArray(char *a) {
     // scan line of text
