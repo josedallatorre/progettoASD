@@ -1,0 +1,9 @@
+compilare da linea di comando
+gcc Period.c -o Period -lm
+
+TODO:
+-generazione stringhe casuali (easy)
+-mandare mail al prof per vedere la roba lineare
+-calcolo dei tempi
+-grafici
+-eventuali commenti su cose interessanti/particolari

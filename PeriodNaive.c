@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
-#include "PeriodNaive.h"
+#include "Period.h"
 
 #define MAX_LINE_SIZE 1000   // maximum size of a line of input
 
