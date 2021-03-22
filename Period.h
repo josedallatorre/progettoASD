@@ -1,7 +1,7 @@
 //number of letters used i.e. 3 = 'a','b','c'
-#define NUM_LETT 3
-
-
+#define NUM_LETT 2
+#define NMAX 500000
+#define NMIN 1000
 
 //scan line from input and convert it to an array
 int scanArray(char *);

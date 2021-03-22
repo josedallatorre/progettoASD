@@ -10,19 +10,14 @@
 int main(int argc, char const *argv[])
 {   
     long res = getResolution();
-    int A = 1000;
-    //double B = exp((log(500000)-log(A))/99);
-    int B = 1.1;
-    printf("%d",B);
-    for (int j = 0; j < 99; j++)
+    int A = NMIN;
+    double B = exp((log(NMAX)-log(A))/99);
+    for (int j = 0; j < 100; j++)
     {
         int nj = A * pow(B,j);
-        printf("%d\n",nj);
         char *s = getString(nj);
-        printf("%s",s);
-        //int p = PeriodSmart(s,nj);
-        //printf("\n%d",p);
-        free(s);
+        int p = PeriodSmart(s,nj);
+        printf("\n%d",p);
     }
     return 0;
 }
@@ -32,7 +27,7 @@ char getLetter(){
     return c;
 }
 char *getString(int n){
-    char *s = (char *)malloc(n*sizeof(char));
+    char *s = (char *)malloc(n+1*sizeof(char));
     for (int i = 0; i <= n; i++)
     {
         if(i==0){            //uso i valori compresi tra
