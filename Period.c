@@ -4,22 +4,50 @@
 #include "Period.h"
 #include <time.h>
 #include <math.h>
+#include <unistd.h>
+#include <fcntl.h>
 #define MAX_LINE_SIZE 1000   // maximum size of a line of input
 #define CLOCK_MONOTONIC 1
-
+#define BILLION  1000000000
 int main(int argc, char const *argv[])
 {   
-    long res = getResolution();
+    long R = getResolution();
     int A = NMIN;
     double B = exp((log(NMAX)-log(A))/99);
+    long Tmin= R*(1/0.001+1);
+    struct timespec start, end;
+    
+    
     for (int j = 0; j < 100; j++)
     {
+        printf("inizio la %d-esima iterazione\n",j);
+        int iter =0;
+        //int nj = 10;
         int nj = A * pow(B,j);
         char *s = getString(nj);
-        int p = PeriodSmart(s,nj);
-        printf("\n%d",p);
+        double t;
+        clock_gettime(CLOCK_MONOTONIC,&start);
+        do{ 
+            PeriodSmart(s, nj);
+            iter++;
+            clock_gettime(CLOCK_MONOTONIC,&end);
+            t = (double)(end.tv_sec-start.tv_sec)*1000000+(end.tv_nsec-start.tv_nsec);
+            //t = timespecDiff(&end,&start);
+            printf("Tmin: %ld time: %f k: %d j: %d\n",Tmin,t, iter,j);
+        }while(t>(double)Tmin);
+        double exec_time = t/iter;
+        FILE *fd = fopen("times.txt","a");
+        fprintf(fd, "n:%d time:%f\n",nj,exec_time);
+        fclose(fd);
+        free(s);
     }
+    
     return 0;
+}
+long timespecDiff(struct timespec *timeA_p, struct timespec *timeB_p)
+{
+  return ((timeA_p->tv_nsec * 1000000000) + timeA_p->tv_sec) -
+           ((timeB_p->tv_nsec * 1000000000) + timeB_p->tv_sec);
 }
 char getLetter(){
     int i = 97 + (rand()%NUM_LETT);  //uso la tabella ASCII
