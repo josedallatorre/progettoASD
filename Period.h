@@ -21,4 +21,5 @@ char getLetter();
 //return a string from alphabet with given length
 char *getString(int);
 
-long timespecDiff(struct timespec *timeA_p, struct timespec *timeB_p);
+//return difference between two given time
+double getDiffTime(struct timespec *end, struct timespec *start);
