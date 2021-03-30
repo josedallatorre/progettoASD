@@ -22,4 +22,4 @@ char getLetter();
 char *getString(int);
 
 //return difference between two given time
-double getDiffTime(struct timespec *end, struct timespec *start);
+long getDiffTime(struct timespec end, struct timespec start);

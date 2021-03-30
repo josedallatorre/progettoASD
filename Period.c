@@ -8,16 +8,13 @@
 #include <fcntl.h>
 #define MAX_LINE_SIZE 1000   // maximum size of a line of input
 #define CLOCK_MONOTONIC 1
-#define BILLION  1000000000
 int main(int argc, char const *argv[])
 {   
     long R = getResolution();
     int A = NMIN;
     double B = exp((log(NMAX)-log(A))/99);
     long Tmin= R*(1/0.001+1);
-    struct timespec start, end;
-    
-    
+    struct timespec start, end;  
     for (int j = 0; j < 100; j++)
     {
         printf("inizio la %d-esima iterazione\n",j);
@@ -27,25 +24,26 @@ int main(int argc, char const *argv[])
         long t;
         clock_gettime(CLOCK_MONOTONIC,&start);
         do{ 
-            PeriodSmart(s, nj);
+            PeriodNaive(s,nj);    
             iter++;
             clock_gettime(CLOCK_MONOTONIC,&end);
-            t=getDiffTime(&end,&start);
+            t = getDiffTime(end, start);
             printf("Tmin: %ld time: %ld k: %d j: %d\n",Tmin,t, iter,j);
-        }while(t>Tmin);
-        long exec_time = t/iter;    
-        FILE *fd = fopen("times.txt","a");
-        fprintf(fd, "n:%d time:%ld j:%d\n",nj,exec_time,j);
+        }while(t<Tmin);
+        long exec_time = t/iter;
+        FILE *fd = fopen("timesNaive.txt","a");
+        fprintf(fd, "n:%d time:%ld\n",nj,exec_time);
         fclose(fd);
         free(s);
-    } 
+    }
   
     
     return 0;
 }
-double getDiffTime(struct timespec *end, struct timespec *start){
-    double temp = (((end->tv_sec - start->tv_sec) * 1.0e12) + 
-    ((end->tv_nsec - start->tv_nsec)));
+
+long getDiffTime(struct timespec end, struct timespec start){
+    long temp = (((end.tv_sec - start.tv_sec)* 1.e09 ) + 
+    ((end.tv_nsec - start.tv_nsec)));
     return temp;
 }
 char getLetter(){
