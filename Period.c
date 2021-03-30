@@ -24,14 +24,14 @@ int main(int argc, char const *argv[])
         long t;
         clock_gettime(CLOCK_MONOTONIC,&start);
         do{ 
-            PeriodNaive(s,nj);    
+            PeriodSmart(s,nj);    
             iter++;
             clock_gettime(CLOCK_MONOTONIC,&end);
             t = getDiffTime(end, start);
             printf("Tmin: %ld time: %ld k: %d j: %d\n",Tmin,t, iter,j);
         }while(t<Tmin);
         long exec_time = t/iter;
-        FILE *fd = fopen("timesNaive.txt","a");
+        FILE *fd = fopen("timesSmart.txt","a");
         fprintf(fd, "n:%d time:%ld\n",nj,exec_time);
         fclose(fd);
         free(s);
@@ -42,7 +42,7 @@ int main(int argc, char const *argv[])
 }
 
 long getDiffTime(struct timespec end, struct timespec start){
-    long temp = (((end.tv_sec - start.tv_sec)* 1.e09 ) + 
+    long temp = (((end.tv_sec - start.tv_sec)* 1.e+9 ) + 
     ((end.tv_nsec - start.tv_nsec)));
     return temp;
 }
@@ -75,7 +75,7 @@ long getResolution() {                        // fare attenzione alle divisioni 
     return (end.tv_nsec - start.tv_nsec);
 }
 int PeriodSmart(char *s, int n){
-    int *r = (int*)malloc((n+1)* sizeof (int) );
+    int r [n+1];
     r[1]=0;
     int z=0;
     for (int i = 1; i <= n-1; i++)//per calcolare r[i+1]
@@ -94,25 +94,27 @@ int PeriodSmart(char *s, int n){
 
     }
     int risp = n - r[n];
-    free(r);
     return risp; 
     }
 
 int PeriodNaive(char *s, int n){
     for (int p = 1; p <= n; p++)
     {
-        int j;
-        for (j  = 0; (j<n-p)&&(s[j]==s[j+p]); j++)
-        {          
-        } 
-        if (j==n-p){
+        char *s1 = malloc((p+1)*sizeof(char *));
+        strncpy(s1, s,p);
+        char *s2 = malloc((n-p+1)*sizeof(char *));
+        strncpy(s2, s,n-p);
+        if (strcmp(s1,s2)==0)
+        {
+            free(s1);
+            free(s2);
             return p;
-        }          
+        }
+        free(s1);
+        free(s2);
     }
     return n;
 }
-
-
 
 int scanArray(char *a) {
     // scan line of text
