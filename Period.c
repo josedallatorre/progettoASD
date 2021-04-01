@@ -24,7 +24,7 @@ int main(int argc, char const *argv[])
         long t;
         clock_gettime(CLOCK_MONOTONIC,&start);
         do{ 
-            PeriodNaive(s,nj);    
+            PeriodSmart(s,nj);    
             iter++;
             clock_gettime(CLOCK_MONOTONIC,&end);
             t = getDiffTime(end, start);

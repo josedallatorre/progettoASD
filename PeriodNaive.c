@@ -9,7 +9,7 @@
 #define MAX_LINE_SIZE 1000   // maximum size of a line of input
 #define CLOCK_MONOTONIC 1
 int main(int argc, char const *argv[])
-{   
+{
     long R = getResolution();
     int A = NMIN;
     double B = exp((log(NMAX)-log(A))/99);
@@ -36,8 +36,6 @@ int main(int argc, char const *argv[])
         fclose(fd);
         free(s);
     }
-  
-    
     return 0;
 }
 

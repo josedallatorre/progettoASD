@@ -1,5 +1,5 @@
 //number of letters used i.e. 3 = 'a','b','c'
-#define NUM_LETT 2
+#define NUM_LETT 3
 //
 #define NMAX 500000
 #define NMIN 1000
@@ -23,3 +23,5 @@ char *getString(int);
 
 //return difference between two given time
 long getDiffTime(struct timespec end, struct timespec start);
+
+char *substr(const char *, int, int);
