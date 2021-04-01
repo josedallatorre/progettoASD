@@ -24,7 +24,7 @@ int main(int argc, char const *argv[])
         long t;
         clock_gettime(CLOCK_MONOTONIC,&start);
         do{ 
-            PeriodSmart(s,nj);    
+            PeriodNaive(s,nj);    
             iter++;
             clock_gettime(CLOCK_MONOTONIC,&end);
             t = getDiffTime(end, start);
@@ -100,18 +100,13 @@ int PeriodSmart(char *s, int n){
 int PeriodNaive(char *s, int n){
     for (int p = 1; p <= n; p++)
     {
-        char *s1 = malloc((p+1)*sizeof(char *));
-        strncpy(s1, s,p);
-        char *s2 = malloc((n-p+1)*sizeof(char *));
-        strncpy(s2, s,n-p);
-        if (strcmp(s1,s2)==0)
-        {
-            free(s1);
-            free(s2);
+        int j;
+        for (j  = 0; (j<n-p)&&(s[j]==s[j+p]); j++)
+        {          
+        } 
+        if (j==n-p){
             return p;
-        }
-        free(s1);
-        free(s2);
+        }          
     }
     return n;
 }
