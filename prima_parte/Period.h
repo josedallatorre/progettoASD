@@ -24,4 +24,4 @@ char *getString(int);
 //return difference between two given time
 long getDiffTime(struct timespec end, struct timespec start);
 
-char *substr(const char *, int, int);
+char *substr(char *, int, int);
