@@ -8,8 +8,6 @@ int main(int argc, char const *argv[])
 {   
     char a[MAX_LINE_SIZE];
     int size = scanArray(a); 
-    char *b = (char *) malloc (sizeof(char) * size+1);
-    memcpy(b+1, a, size);
     int p = PeriodSmart(b, size);
     printf("%d", p);
     return 0;
@@ -34,24 +32,7 @@ int PeriodSmart(char *s, int n){
         }
 
     }
-    int risp = n - r[n];
-    return risp; 
-    }
-
-int PeriodNaive(char *s, int n){
-    for (int p = 1; p <= n; p++)
-    {
-        int j;
-        for (j  = 0; (j<n-p)&&(s[j]==s[j+p]); j++)
-        {          
-        } 
-        if (j==n-p){
-            return p;
-        }          
-    }
-    return n;
 }
-
 int scanArray(char *a) {
     // scan line of text
     char line[MAX_LINE_SIZE];
