@@ -14,25 +14,29 @@ int main(int argc, char const *argv[])
 }
 
 int PeriodSmart(char *s, int n){
-    int r [n+1];
+    int r [n];
     r[0]=0;
     int z=0;
-    for (int i = 0; i < n; i++)//per calcolare r[i+1]
+    for (int i = 1; i < n; ++i)
     {
-        z=r[i];
-        while ((z>0)&&(s[i+1]!=s[z+1]))
+        z=r[i-1];
+        while ((z>0)&&(s[i]!=s[z]))
         {
-            z=r[z];
+            z=r[z-1];
         }
-        if (s[i+1]==s[z+1])
+        if (s[i]==s[z])
         {
-            r[i+1]= z+1;
+            r[i]= z+1;
         }else{
-            r[i+1]=0;
+            r[i]=0;
         }
 
     }
-    return r[n];
+    for (int i = 0; i < n; i++){
+	printf("r[%d]:%d\n", i, r[i]);
+	}
+
+    return n - r[n-1];
 }
 int scanArray(char *a) {
     // scan line of text
