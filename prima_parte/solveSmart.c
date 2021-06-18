@@ -32,10 +32,6 @@ int PeriodSmart(char *s, int n){
         }
 
     }
-    for (int i = 0; i < n; i++){
-	printf("r[%d]:%d\n", i, r[i]);
-	}
-
     return n - r[n-1];
 }
 int scanArray(char *a) {
