@@ -8,16 +8,16 @@ int main(int argc, char const *argv[])
 {   
     char a[MAX_LINE_SIZE];
     int size = scanArray(a); 
-    int p = PeriodSmart(b, size);
+    int p = PeriodSmart(a, size);
     printf("%d", p);
     return 0;
 }
 
 int PeriodSmart(char *s, int n){
     int r [n+1];
-    r[1]=0;
+    r[0]=0;
     int z=0;
-    for (int i = 1; i <= n-1; i++)//per calcolare r[i+1]
+    for (int i = 0; i < n; i++)//per calcolare r[i+1]
     {
         z=r[i];
         while ((z>0)&&(s[i+1]!=s[z+1]))
@@ -32,6 +32,7 @@ int PeriodSmart(char *s, int n){
         }
 
     }
+    return r[n];
 }
 int scanArray(char *a) {
     // scan line of text
