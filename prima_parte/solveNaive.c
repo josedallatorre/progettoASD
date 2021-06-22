@@ -21,23 +21,26 @@ int PeriodNaive(char *s, int n){
     
     {
         //printf("n:%d i:%d n-i:%d\n",n, i, n-i);
-	char *s1 = (char *)malloc(sizeof(char) *(n-i+2));
-	s1 = memcpy(s1, s, (n-i));
+	char *s1 = (char *)malloc((n-i+1)*sizeof(char));
+	memset(s1, '\0', n-i+1);
+	strncpy(s1, s, n-i);
 	char *s2 = substr(s, i, n);
-	s1[n-i+1] = '\0';
-	s1[n-i] = '\0';
-        if(strcmp (s1, s2)==0)
+        if(strcmp (s1, s2)==0){
+	    free(s1);
+            free(s2);
 	    return i;
+	}else{
 	free(s1);
 	free(s2);
+	}
     }
     return n;
 }
 char *substr(char *src, int start, int end){
     int len = end - start;
-    char *dest = (char *)malloc(sizeof(char)*(len+1));
-    dest = strncpy(dest, (src + start), len);
-    dest[len +1] = '\0';
+    char *dest = (char *)malloc((len+1)*sizeof(char));
+    memset(dest, '\0', len+1);
+    strncpy(dest, (src + start),len);
     return dest;
 }
 int scanArray(char *a) {

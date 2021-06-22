@@ -23,7 +23,7 @@ int PeriodSmart(char *s, int n){
         while ((z>0)&&(s[i]!=s[z]))
         {
             z=r[z-1];
-        }
+        } 
         if (s[i]==s[z])
         {
             r[i]= z+1;
