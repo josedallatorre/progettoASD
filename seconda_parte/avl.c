@@ -10,6 +10,20 @@ int main(int argc, char const *argv[])
     freeTree(root);
     return 0;
 }
+void fixup(Node *node){
+    //caso node root
+    if (node->parent == NULL){
+        return;
+    }
+    if (node->right->heigth > node->left->heigth + 1){
+	
+    //caso node foglia
+    if (node->left == NULL && node->right == NULL)
+    {
+        node->height= node->height+1;
+        fixup(node->parent);
+    }
+}
 void handleInput(Node *root){
     //initialize variable for the input
     char function[20];
@@ -56,9 +70,11 @@ struct Node *insertNode(struct Node *root, struct Node *node){
     if (node->key < y->key)
     {
         y->left = node;
+        fixup(y->left);
     }
     else{
         y->right = node;
+        fixup(y->right);
     }
     return root;
 }

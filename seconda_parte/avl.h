@@ -15,4 +15,5 @@ Node *createNode(int, char *);
 void freeTree(Node *);
 //insert a node in AVL
 Node *insertNode(Node *, Node*);
-//TODO: fix height
+//fix-up height, given node 
+void fixup(Node *);
