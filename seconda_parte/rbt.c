@@ -40,15 +40,15 @@ Node *rbtInsert(Node *root, Node *node){
 void rbtInsertFixup(Node *root, Node *node){
     while(node->parent->color == red){
 	if(node->parent == node->parent->parent->left){
-	    node *y = NULL;
-	    node *y = node->parent->parent->right;
+	    Node *y = NULL;
+	    y = node->parent->parent->right;
 	    if(y->color == red){ //case 1 
 		node->parent->color = black;
 		y->color = black;
 		node->parent->parent->color = red;
 		node = node->parent->parent;
 	    }
-	    else if(node = node->parent->right){//case 2
+	    else if(node == node->parent->right){//case 2
 		node = node->parent;
 		leftRotate(root, node);
 		}
@@ -57,8 +57,8 @@ void rbtInsertFixup(Node *root, Node *node){
 	    rightRotate(root, node->parent->parent);
 	}
 	else{
-	    node *y = node->parent->parent->left;
-	    if(y.color == red){ //case 1 
+	    Node *y = node->parent->parent->left;
+	    if(y->color == red){ //case 1 
 		node->parent->color = black;
 		y->color = black;
 		node->parent->parent->color = red;
@@ -101,7 +101,7 @@ void rightRotate(Node *root, Node *x){
     if(y->right !=NULL){
 	y->right->parent = x;
     }
-    y->parent = x->parent
+    y->parent = x->parent;
     if(x->parent ==NULL){
 	root = y;
     }
