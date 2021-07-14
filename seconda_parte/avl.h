@@ -14,6 +14,14 @@ Node *createNode(int, char *);
 //free space
 void freeTree(Node *);
 //insert a node in AVL
-Node *insertNode(Node *, Node*);
-//fix-up height, given node 
-void fixup(Node *);
+void insertNode(Node *, Node*);
+//fix-up proprierties, given node 
+void fixup(Node *,Node *);
+//fix-up height, given node
+void fixHeight(Node *);
+//return max of 2 integer
+int max(int, int);
+//rotate to the left a tree with given its root
+void leftRotate(Node *,Node *);
+//rotate to the right a tree with given its root
+void rightRotate(Node *,Node *);
