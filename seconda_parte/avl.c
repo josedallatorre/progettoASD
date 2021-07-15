@@ -86,13 +86,13 @@ void handleInput(Node *root){
     while (strcmp(function, "exit")!= 0)
     {
         if ((strcmp(function, "insert"))==0)
-        {
+        {        
             scanf("%d %s",&key, text);
             Node *node = createNode(key, text);
 	    if(root == NULL){
 		root = node;
 	    }else{
-		insertNode(root, node);
+		root = insertNode(root, node);
 	    }
 	    fixup(root, node);
         }
@@ -107,7 +107,7 @@ void handleInput(Node *root){
         scanf("%s", function);
     }
 }
-void insertNode(Node *root, Node *node){
+Node *insertNode(Node *root, Node *node){
     Node *y = NULL;
     Node *x = root;
     while(x!=NULL){
@@ -126,6 +126,7 @@ void insertNode(Node *root, Node *node){
     }else{
 	y->right = node;
     }
+    return root;
 }
 void show(Node *node){
     if (node == NULL)
@@ -139,9 +140,10 @@ void show(Node *node){
     
 }
 Node *createNode(int key, char *text){
-    struct Node *node = malloc(sizeof(struct Node));
+    Node *node = (Node *)malloc(sizeof(Node));
     node->key = key;
-    node->text = text;
+    node->text = malloc(strlen(text)+1);
+    strcpy(node->text, text);
     node->height = 0;
     node->left= NULL;
     node->right= NULL;
@@ -156,6 +158,7 @@ void freeTree(Node *node){
         Node *right = node->right;
         Node *left = node->left;
         free(node);
+        free(node->text);
         freeTree(right);
         freeTree(left);
     }
