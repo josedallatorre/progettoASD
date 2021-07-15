@@ -25,3 +25,5 @@ int max(int, int);
 void leftRotate(Node *,Node *);
 //rotate to the right a tree with given its root
 void rightRotate(Node *,Node *);
+//find text given root and key
+char *find(Node *, int);

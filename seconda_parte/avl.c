@@ -11,22 +11,33 @@ int main(int argc, char const *argv[])
     return 0;
 }
 void fixup(Node *root,Node *node){
-    if(node == NULL){
+    if(node == NULL){//last node was the root
 	return;
-    }	
+    }  	
     fixHeight(node);
-    /*
-    if(node->right->height > node->left->height +1){
+    if (node->right ==NULL|| node->left==NULL){
+    }
+    else if(node->right->height > node->left->height +1){
 	rightRotate(root, node);
 	fixHeight(node);
     }
     else if(node->right->height +1 < node->left->height){
 	leftRotate(root,node);
 	fixHeight(node);
-    }else{
-//	fixup(root, node->parent);
     }
-    */
+    fixup(root, node->parent);
+    
+
+}
+char *find(Node *node, int key){
+    while(node != NULL && key != node->key){
+        if(key<node->key){
+            node = node->left;
+        }else{
+            node = node->right;
+        }
+    }
+    return node->text;
 }
 void leftRotate(Node  *root, Node *node){    
     Node *y = node->right;
@@ -66,10 +77,15 @@ void rightRotate(Node *root,Node *node){
 }
 
 void fixHeight(Node *node){
-    if(node->left == NULL || node->right == NULL){
-	node->height = 1;
+    if(node->left == NULL && node->right == NULL){
+	    node->height = 1;
+    }else if(node->right == NULL){
+        node->height = node->left->height+1;
+    }else if(node->left == NULL){
+        node->height = node->right->height+1;
+        
     }else{
-    node->height = max(node->left->height, node->right->height)+1;
+        node->height = max(node->left->height, node->right->height)+1;
     }
 }
 int max(int x, int y){
@@ -102,7 +118,8 @@ void handleInput(Node *root){
         }
          if ((strcmp(function, "find"))==0)
         {
-            printf("TODO find\n");
+            scanf("%d", &key);
+            printf("%s\n",find(root, key));
         }
         scanf("%s", function);
     }
@@ -137,13 +154,12 @@ void show(Node *node){
         show(node->left);
         show(node->right);
     }
-    
 }
 Node *createNode(int key, char *text){
     Node *node = (Node *)malloc(sizeof(Node));
     node->key = key;
-    node->text = malloc(strlen(text)+1);
-    strcpy(node->text, text);
+    node->text = (char *)malloc(strlen(text)+1); //make a local copy of the text
+    strcpy(node->text, text);  //otherwise it will modified because it's a ptr
     node->height = 0;
     node->left= NULL;
     node->right= NULL;
