@@ -1,10 +1,9 @@
-typedef enum {black, red} COLOR;
 typedef struct Node
 {
     int key;
     char *text;
     int height;
-    COLOR color;
+    char *color;
     struct Node *left, *right, *parent;
 }Node;
 //handle input, given root(pass to other function)

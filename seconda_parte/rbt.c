@@ -5,8 +5,8 @@
 int main(int argc, char const *argv[])
 {   
     //initialize the root
-    Node *root = createNode(0, "NULL");
-    //handleInput(root);
+    Node *root = NULL;
+    handleInput(root);
     freeTree(root);
     return 0;
 }
@@ -20,6 +20,7 @@ Node *rbtInsert(Node *root, Node *node){
 	}else{
 	    x = x->right;
 	}
+    }
     node->parent = y;
     if(y == NULL){
 	root = node;
@@ -32,47 +33,46 @@ Node *rbtInsert(Node *root, Node *node){
     }
     node->left = NULL;
     node->right = NULL;
-    node->color = red;
+    node->color = "red";
     rbtInsertFixup(root, node);
     return root;
-    }
 }
 void rbtInsertFixup(Node *root, Node *node){
-    while(node->parent->color == red){
+    Node *y = NULL;
+    while(strcmp(node->parent->color ,"red")==0){
 	if(node->parent == node->parent->parent->left){
-	    Node *y = NULL;
 	    y = node->parent->parent->right;
-	    if(y->color == red){ //case 1 
-		node->parent->color = black;
-		y->color = black;
-		node->parent->parent->color = red;
+	    if(strcmp(y->color,"red")==0){ //case 1 
+		node->parent->color = "black";
+		y->color = "black";
+		node->parent->parent->color = "red";
 		node = node->parent->parent;
 	    }
 	    else if(node == node->parent->right){//case 2
 		node = node->parent;
 		leftRotate(root, node);
 		}
-	    node->parent->color = black;//case 3
-	    node->parent->parent->color = red;
+	    node->parent->color = "black";//case 3
+	    node->parent->parent->color = "red";
 	    rightRotate(root, node->parent->parent);
 	}
 	else{
-	    Node *y = node->parent->parent->left;
-	    if(y->color == red){ //case 1 
-		node->parent->color = black;
-		y->color = black;
-		node->parent->parent->color = red;
+	    y = node->parent->parent->left;
+	    if(strcmp(y->color, "red")==0){ //case 1 
+		node->parent->color = "black";
+		y->color = "black";
+		node->parent->parent->color = "red";
 		node = node->parent->parent;
 	    }
 	    else if(node ==node->parent->left){//case 2
 		node = node->parent;
 		rightRotate(root, node);
 		}
-	    node->parent->color = black;//case 3
-	    node->parent->parent->color = red;
+	    node->parent->color = "black";//case 3
+	    node->parent->parent->color = "red";
 	    leftRotate(root, node->parent->parent);
 	}
-	root->color = black;
+	root->color = "black";
     }
 }
 
@@ -128,7 +128,11 @@ void handleInput(Node *root){
         {
             scanf("%d %s",&key, text);
             Node *node = createNode(key, text);
-            root = rbtInsert(root, node);
+	    if(root == NULL){
+		    root = node;
+	    }else{
+		    root = rbtInsert(root, node);
+	    }
         }
         if ((strcmp(function, "show"))==0)
         {
@@ -146,18 +150,19 @@ void show(Node *node){
     {
         printf("NULL ");
     }else{
-        printf("%d:%s:%d ", node->key, node->text, node->height);
+        printf("%d:%s:%s ", node->key, node->text, node->color);
         show(node->left);
         show(node->right);
     }
     
 }
 Node *createNode(int key, char *text){
-    struct Node *node = malloc(sizeof(struct Node));
+    struct Node *node = (Node *)malloc(sizeof(struct Node));
     node->key = key;
-    node->text = text;
+    node->text = (char *)malloc(strlen(text)+1);
+    strcpy(node->text, text);
     node->height = 0;
-    node->color = red;
+    node->color = "black";
     node->left= NULL;
     node->right= NULL;
     node->parent = NULL;
@@ -170,6 +175,7 @@ void freeTree(Node *node){
     }else{
         Node *right = node->right;
         Node *left = node->left;
+	free(node->text);
         free(node);
         freeTree(right);
         freeTree(left);
