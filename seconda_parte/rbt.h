@@ -1,24 +1,31 @@
+typedef enum COLOR {red, black}COLOR;
 typedef struct Node
 {
     int key;
     char *text;
-    int height;
-    char *color;
+    COLOR color;
     struct Node *left, *right, *parent;
 }Node;
+typedef struct RBT
+{
+    struct Node *root;
+    struct Node *leaf;
+}RBT;
 //handle input, given root(pass to other function)
-void handleInput(Node *);
+void handleInput(RBT *);
 //show the avl
-void show(Node *);
+void show(RBT *, Node *);
+//create RBT
+RBT *createRBT();
 //create a new node, given key, text
 Node *createNode(int, char *);
 //free space
-void freeTree(Node *);
+void freeTree(RBT *, Node *);
 //insert a node in AVL
-Node *rbtInsert(Node *, Node*);
+void rbtInsert(RBT *, Node*);
 //restore rbt properties
-void rbtInsertFixup(Node *, Node*);
+void rbtInsertFixup(RBT *, Node*);
 //compute a left rotation of a given node
-void leftRotate(Node *, Node *);
+void leftRotate(RBT *, Node *);
 //compute a right rotation of a given node
-void rightRotate(Node *, Node *);
+void rightRotate(RBT *, Node *);
