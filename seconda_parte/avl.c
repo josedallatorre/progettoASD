@@ -5,32 +5,62 @@
 int main(int argc, char const *argv[])
 {   
     //initialize the root
-    Node *root = NULL;
-    handleInput(root);
-    freeTree(root);
+    AVL *T = createAVL();
+    handleInput(T);
+    freeTree(T, T->root);
     return 0;
 }
-void fixup(Node *root,Node *node){
-    if(node == NULL){//last node was the root
-	return;
-    }  	
-    fixHeight(node);
-    if (node->right ==NULL|| node->left==NULL){
+int balance(AVL *T, Node *node){
+    if (node == T->leaf)
+    {
+        return 0;
+    }else if (node->right == T->leaf || node->left == T->leaf)
+    {
+        return node->height;
+    }else{
+        return (node->left->height - node->right->height);
     }
-    else if(node->right->height > node->left->height +1){
-	rightRotate(root, node);
-	fixHeight(node);
-    }
-    else if(node->right->height +1 < node->left->height){
-	leftRotate(root,node);
-	fixHeight(node);
-    }
-    fixup(root, node->parent);
     
-
+    
 }
-char *find(Node *node, int key){
-    while(node != NULL && key != node->key){
+void fixup(AVL *T,Node *node){
+    fixHeight(T, node->parent);
+    if (node->parent == T->leaf)//node is root
+    {
+        return;
+    }else if(node->parent->parent != T->leaf){
+        Node *p = node->parent;
+        Node *gp = p->parent;
+        fixHeight(T, gp);
+        if (balance(T,gp)<-1 || balance(T,gp)>1)  //grandparent isn't balanced
+        {
+            if (p == gp->left)
+            {
+                if (node == p->left)
+                {
+                    rightRotate(T, gp);
+                }else{
+                    leftRotate(T,p);
+                    rightRotate(T, gp);
+                }
+                
+            }else if (p == gp->right){
+                if (node == p->right)
+                {
+                    leftRotate(T, gp);
+                }else{
+                    rightRotate(T, p);
+                    leftRotate(T, gp);
+                }
+                
+            }
+            
+        }
+    }
+    fixup(T, node->parent);
+}
+char *find(AVL *T, Node *node, int key){
+    while(node != T->leaf && key != node->key){
         if(key<node->key){
             node = node->left;
         }else{
@@ -39,53 +69,61 @@ char *find(Node *node, int key){
     }
     return node->text;
 }
-void leftRotate(Node  *root, Node *node){    
+void leftRotate(AVL *T, Node *node){    
     Node *y = node->right;
     node->right = y->left;
-    if(y->left != NULL){
-	y->left->parent = node;
+    if(y->left != T->leaf){
+	    y->left->parent = node;
     }
     y->parent = node->parent;
-    if(node->parent == NULL){
-	root= y;
+    if(node->parent == T->leaf){
+	    T->root= y;
     }
     else if(node == node->parent->left){
-	node->parent->left = y;
+	    node->parent->left = y;
     }else{
-	node->parent->left = y;
+	    node->parent->right = y;
     }
     y->left = node;
     node->parent = y;
+    fixHeight(T, node);
+    fixHeight(T, y);
 }
-void rightRotate(Node *root,Node *node){
+void rightRotate(AVL *T,Node *node){
     Node *y = node->left;
     node->left = y->right;
-    if(y->right != NULL){
-	y->left->parent = node;
+    if(y->right != T->leaf){
+	    y->right->parent = node;
     }
     y->parent = node->parent;
-    if(node->parent ==NULL){
-	root = y;
+    if(node->parent ==T->leaf){
+	    T->root = y;
     }
     else if(node == node->parent->right){
-	node->parent->right = y;
+	    node->parent->right = y;
     }else{
-	node->parent->right = y;
+	    node->parent->left = y;
     }
     y->right = node;
     node->parent = y;
+    fixHeight(T, node);
+    fixHeight(T, y);
 }
 
-void fixHeight(Node *node){
-    if(node->left == NULL && node->right == NULL){
+void fixHeight(AVL *T,Node *node){
+    if(node== T->leaf){
+        return;
+    }else{
+    if(node->left == T->leaf && node->right == T->leaf){
 	    node->height = 1;
-    }else if(node->right == NULL){
+    }else if(node->right == T->leaf){
         node->height = node->left->height+1;
-    }else if(node->left == NULL){
+    }else if(node->left == T->leaf){
         node->height = node->right->height+1;
         
     }else{
         node->height = max(node->left->height, node->right->height)+1;
+    }
     }
 }
 int max(int x, int y){
@@ -93,7 +131,7 @@ int max(int x, int y){
     else return y;
 }
 
-void handleInput(Node *root){
+void handleInput(AVL *T){
     //initialize variable for the input
     char function[20];
     int key;
@@ -105,77 +143,84 @@ void handleInput(Node *root){
         {        
             scanf("%d %s",&key, text);
             Node *node = createNode(key, text);
-	    if(root == NULL){
-		root = node;
-	    }else{
-		root = insertNode(root, node);
-	    }
-	    fixup(root, node);
+		    insertNode(T, node);
+	        fixup(T, node);
         }
         if ((strcmp(function, "show"))==0)
         {
-            show(root);
+            show(T, T->root);
         }
          if ((strcmp(function, "find"))==0)
         {
             scanf("%d", &key);
-            printf("%s\n",find(root, key));
+            printf("\n%s",find(T, T->root, key));
         }
         scanf("%s", function);
     }
 }
-Node *insertNode(Node *root, Node *node){
-    Node *y = NULL;
-    Node *x = root;
-    while(x!=NULL){
-	y = x;
-	if(node->key < x->key){
-	    x = x->left;
-	}else{
-	    x = x->right;
-	}
+void insertNode(AVL *T, Node *node){
+    Node *y = T->leaf;
+    Node *x = T->root;
+    while(x!=T->leaf){
+	    y = x;
+	    if(node->key < x->key){
+	        x = x->left;
+	    }else{
+	        x = x->right;
+	    }
     }
     node->parent = y;
-    if(y == NULL){
-	root = node;
+    if(y == T->leaf){
+	    T->root = node;
     }else if(node->key < y->key){
-	y->left = node;
+	    y->left = node;
     }else{
-	y->right = node;
+	    y->right = node;
     }
-    return root;
+    node->left= T->leaf;
+    node->right=T->leaf;
 }
-void show(Node *node){
-    if (node == NULL)
+void show(AVL *T,Node *node){
+    if (node == T->leaf)
     {
         printf("NULL ");
     }else{
         printf("%d:%s:%d ", node->key, node->text, node->height);
-        show(node->left);
-        show(node->right);
+        show(T,node->left);
+        show(T,node->right);
     }
 }
+
+AVL *createAVL() {
+    struct AVL *T = (AVL *)malloc(sizeof(struct AVL));
+    struct Node *leaf = (Node *)malloc(sizeof(struct Node));
+    leaf->parent= leaf->right = leaf->left = NULL;
+    T->leaf = leaf;
+    T->root = T->leaf; 
+    return T;
+}
+
 Node *createNode(int key, char *text){
     Node *node = (Node *)malloc(sizeof(Node));
     node->key = key;
     node->text = (char *)malloc(strlen(text)+1); //make a local copy of the text
     strcpy(node->text, text);  //otherwise it will modified because it's a ptr
-    node->height = 0;
+    node->height = 1;
     node->left= NULL;
     node->right= NULL;
     node->parent = NULL;
     return node;
 }
-void freeTree(Node *node){
-    if (node == NULL)
+void freeTree(AVL *T, Node *node){
+    if (node == T->leaf || node == NULL)
     {
         return;
     }else{
         Node *right = node->right;
         Node *left = node->left;
-        free(node);
         free(node->text);
-        freeTree(right);
-        freeTree(left);
+        free(node);
+        freeTree(T,right);
+        freeTree(T,left);
     }
 }
