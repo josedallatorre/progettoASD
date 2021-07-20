@@ -96,7 +96,7 @@ void rbtInsertFixup(RBT *T, Node *node){
 void leftRotate(RBT *T, Node *x){
     Node *y = x->right;
     x->right = y-> left;//turn y subtree into x right subtree
-    if (y->left != NULL){
+    if (y->left != T->leaf){
 	    y->left->parent = x;
     }
     y->parent = x->parent;
@@ -119,7 +119,7 @@ void rightRotate(RBT *T, Node *x){
 	    y->right->parent = x;
     }
     y->parent = x->parent;
-    if(x->parent ==NULL){
+    if(x->parent ==T->leaf){
 	    T->root = y;
     }
     else if(x == x->parent->right){
