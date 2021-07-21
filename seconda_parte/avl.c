@@ -24,14 +24,12 @@ int balance(AVL *T, Node *node){
     
 }
 void fixup(AVL *T,Node *node){
-    fixHeight(T, node->parent);
-    if (node->parent == T->leaf)//node is root
+    fixHeight(T, node);
+    while (node->parent != T->leaf)
     {
-        return;
-    }else if(node->parent->parent != T->leaf){
+        fixHeight(T, node->parent);
         Node *p = node->parent;
         Node *gp = p->parent;
-        fixHeight(T, gp);
         if (balance(T,gp)<-1 || balance(T,gp)>1)  //grandparent isn't balanced
         {
             if (p == gp->left)
@@ -54,10 +52,14 @@ void fixup(AVL *T,Node *node){
                 }
                 
             }
-            
+            break;
         }
+        p = p->parent;
+        node = node->parent;
+        
     }
-    fixup(T, node->parent);
+    
+        
 }
 char *find(AVL *T, Node *node, int key){
     while(node != T->leaf && key != node->key){
@@ -111,7 +113,7 @@ void rightRotate(AVL *T,Node *node){
 }
 
 void fixHeight(AVL *T,Node *node){
-    if(node== T->leaf){
+    if(node== T->leaf || node == NULL){
         return;
     }else{
     if(node->left == T->leaf && node->right == T->leaf){
@@ -159,6 +161,8 @@ void handleInput(AVL *T){
     }
 }
 void insertNode(AVL *T, Node *node){
+    node->left= T->leaf;
+    node->right=T->leaf;
     Node *y = T->leaf;
     Node *x = T->root;
     while(x!=T->leaf){
@@ -177,8 +181,6 @@ void insertNode(AVL *T, Node *node){
     }else{
 	    y->right = node;
     }
-    node->left= T->leaf;
-    node->right=T->leaf;
 }
 void show(AVL *T,Node *node){
     if (node == T->leaf)
