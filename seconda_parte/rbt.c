@@ -208,7 +208,7 @@ void freeTree(RBT *T, Node *node){
     }else{
         Node *right = node->right;
         Node *left = node->left;
-	free(node->text);
+	    free(node->text);
         free(node);
         freeTree(T,right);
         freeTree(T, left);
