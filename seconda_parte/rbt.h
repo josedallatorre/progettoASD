@@ -29,4 +29,8 @@ void rbtInsertFixup(RBT *, Node*);
 void leftRotate(RBT *, Node *);
 //compute a right rotation of a given node
 void rightRotate(RBT *, Node *);
+//compute times
+void computeTimes();
+//return int, given root and key
+int find2(RBT *, Node *, int);
 
