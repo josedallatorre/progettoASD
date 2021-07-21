@@ -2,13 +2,76 @@
 #include <stdlib.h>
 #include <string.h>
 #include "rbt.h"
+#include "times.h"
+#include "times.c"
+#include <time.h>
+#include <math.h>
 int main(int argc, char const *argv[])
 {   
     //initialize the root
-    RBT *T = createRBT();
-    handleInput(T);
-    freeTree(T, T->root);
+    //RBT *T = createRBT();
+    //handleInput(T);
+    //freeTree(T, T->root);
+    computeTimes();
     return 0;
+}
+void computeTimes(){
+    long R = getResolution();
+    int A = NMIN;
+    double B = exp((log(NMAX)-log(A))/99);
+    long Tmin= R*(1/0.01+1);
+    struct timespec start, end;
+    long tTot[100]={0};
+    long tMean[100]={0};
+    for (int j = 0; j < 100; j++)
+    {
+        printf("inizio la %d-esima iterazione\n",j);
+        int n = A * pow(B,j);
+        clock_gettime(CLOCK_MONOTONIC,&start);     
+        do{   
+            RBT *T = createRBT();        
+            for (int i = 1; i < n; i++)
+            {
+                
+                int key = rand() / (RAND_MAX / n + 1);
+                if (find2(T, T->root, key)==-1)
+                {
+                    Node *node = createNode(key, "");
+                    rbtInsert(T, node);
+                }
+            }
+            clock_gettime(CLOCK_MONOTONIC,&end);
+            tTot[j] = getDiffTime(end, start);
+            tMean[j] = tTot[j]/n;
+            freeTree(T, T->root);
+        }while(tMean[j]<Tmin);
+        double s =0.00;
+        for (int i = 1; i < 100; i++)
+        {
+            s = s + pow((tTot[i]-tMean[i]),2);
+        }
+        double D = sqrt(s/n);
+        
+        FILE *fd = fopen("timesRBT.txt","a");
+        fprintf(fd, "n: %d tTot:%ld tMean:%ld D:%f\n", n,tTot[j], tMean[j], D);
+        fclose(fd);
+    }
+}
+int find2(RBT *T, Node *node, int key){
+    while(node != T->leaf && key != node->key){
+        if(key<node->key){
+            node = node->left;
+        }else{
+            node = node->right;
+        }
+    }
+    if (node == T->leaf)
+    {
+        return -1;
+    }else{
+        return 0;
+    }
+    
 }
 void find(RBT *T, Node *node, int key){
     if(node == T->leaf){

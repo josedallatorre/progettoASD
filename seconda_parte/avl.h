@@ -34,5 +34,9 @@ void leftRotate(AVL *T, Node *);
 void rightRotate(AVL *T,Node *);
 //find text given root and key
 char *find(AVL *, Node *, int);
+//return int, given root and key
+int find2(AVL *, Node *, int);
 //return balance of a node
 int balance(AVL*, Node *);
+//compute times
+void computeTimes();
